@@ -1,0 +1,28 @@
+library(shiny)
+shinyUI(fluidPage(
+  titlePanel(title = "This is shinyApp"),
+  sidebarLayout(
+    sidebarPanel(("Enter personal information"),
+                 textInput("name", "Enter your Name", ""),
+                 textInput("age", "Enter your age", "")),
+                 
+    mainPanel(("Personal information"),
+              textOutput('myName'),
+              textOutput('myAge'),
+              )
+  ),
+  
+))
+
+
+server.R
+
+
+library(shiny)
+shinyServer(
+  function(input, output){
+    output$myName <- renderText(input$name)
+    output$myAge <- renderText(input$age)
+    
+  }
+)
