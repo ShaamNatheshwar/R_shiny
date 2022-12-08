@@ -1,0 +1,61 @@
+# global.r
+# Defining a dummy dataframe for the sake of demo
+# The dataset / objects/ variables from global.r is accessible to both the server.r and ui.r files
+# placed in the working directory
+# creating dataframe object with 3 variables namely, Year, Month & Person name
+# this dataframe might not make sense but just for example
+data = data.frame(Year=c("2002","2003","2004","2003","2001","2002", "2001"), 
+                  Month = c("Jan", "Feb", "Mar", "Jan", "Dec", "Jan", "Nov"),
+                  Name =c("Sam", "Paul", "James", "Ana","Rose", "Juan", "Tim"),
+                  row.names=NULL, stringsAsFactors = FALSE)
+                  
+                  
+                  
+                  library(shiny)
+
+shinyServer(function(session, input, output){
+  
+#   observerEvent() function can be used in cases when an action needs to be performed based on event
+#   In this case we want the second selectInput() choices to be updated based on the changes in 
+#   the first select input()
+  
+  
+  # Update based on the year change event
+  # bascially populate the months corresponding to the year
+  observeEvent(
+    input$Year,
+updateSelectInput(session, "Month", "Month", 
+                  choices = data$Month[data$Year==input$Year]))
+  
+  # Update as soon as Month gets populated according to the year and month selected
+  observeEvent(
+    input$Month,
+updateSelectInput(session, "Name", "Name", 
+    choices = data$Name[data$Month==input$Month & data$Year==input$Year]))
+  
+  # just to display the dataset we created in global.r 
+output$dataset <- renderTable({
+  data
+})
+  
+  })
+  
+  
+  library(shiny)
+shinyUI(fluidPage(
+  titlePanel("Demo updateselectInput() and also introducing observeEvent() function"),
+  # data is a dummy dataset which is coming from global.r
+  # using the variables from data dataset we are populating the selectinput
+  selectInput("Year", "Year", choices = unique(data$Year)),
+  
+  # Second select input for month - empty - no choice to display.
+  # This is done intentionally as the idea is to populate this selectinput using 
+  # updateselectinput on the loading of app or change in the year selectinput choice
+  selectInput("Month", "Month", choices = "", selected = ""),
+  
+  # Third select input for Person - empty - no choice to display
+  # This is done intentionally as the idea is to populate this selectinput using 
+  # updateselectinput on the loading of app or change in the year and/or month selectinput choice
+  selectInput("Name", "Name", choices = "", selected = ""),
+  tableOutput("dataset")
+  ))
