@@ -1,0 +1,12 @@
+library(shiny)
+shinyUI(fluidPage(
+  titlePanel(title = "This is shinyApp"),
+  sidebarLayout(
+    position = "right",
+    sidebarPanel(h3("this is sideBar panel"),
+                 h4("this is sideBar panel"),
+                 ),
+    mainPanel("this is main panel")
+  ),
+  
+))
