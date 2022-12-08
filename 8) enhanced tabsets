@@ -1,0 +1,63 @@
+library(shiny)
+shinyUI(fluidPage(
+  titlePanel(title = "This is shinyApp"),
+  sidebarLayout(
+    sidebarPanel(("Enter personal information"),
+                 selectInput("var", "1 select the variables from iris data set", choices = c("Sepal.length"=1, "Sepal.width"=2, "Petal.length"=3, "Petal.width"=4),selected = "Arizona"),
+                 br(),
+                 sliderInput("bins", "2. Select the number of BINS for histogram", min=5, max = 25, value = 15),
+                 br(), 
+                 radioButtons("color","3. select the color of the histogram", choices=c("Green","Red","Yellow"),selected = "Green")
+    ),
+    
+    mainPanel(
+      tabsetPanel(
+        type = "tab",
+        
+        tabPanel("summary", verbatimTextOutput("summary")),
+        tabPanel("Structure", verbatimTextOutput("str")),
+        tabPanel("Data", tableOutput("data")),
+        tabPanel("Plot",  plotOutput("myHist") ),
+      ),
+     
+    ),
+    
+  ),
+  
+))
+
+
+
+
+
+
+
+
+library(shiny)
+shinyServer(
+  function(input, output){
+    
+    colm <- reactive({
+      as.numeric(input$var)
+    })
+    output$summary <- renderPrint({
+      summary(iris)
+    })
+    
+    output$str <- renderPrint({
+      str(iris)
+    })
+    
+    
+    output$data <- renderTable({
+      colm <- as.numeric(input$var)
+      iris[colm()]
+      #head(iris)
+    })
+    output$myHist <- renderPlot({ 
+     
+      hist(iris[,colm()],col=input$color,xlim=c(0, max(iris[,colm()])), main="Histogram data set", breaks=seq(0, max(iris[,colm()], l=input$bins+1),xlab=names(iris[colm()])))
+    })
+    
+  }
+)
