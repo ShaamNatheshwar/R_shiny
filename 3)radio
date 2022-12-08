@@ -1,0 +1,34 @@
+library(shiny)
+shinyUI(fluidPage(
+  titlePanel(title = "This is shinyApp"),
+  sidebarLayout(
+    sidebarPanel(("Enter personal information"),
+                 textInput("name", "Enter your Name", ""),
+                 textInput("age", "Enter your age", ""),
+                 radioButtons("gender", "select the gender",list("male","female"), "")
+                 ),
+                 
+    mainPanel(("Personal information"),
+              textOutput('myName') ,
+              textOutput('myAge'),
+              textOutput('myGender')
+              ),
+    
+  ),
+  
+))
+
+
+
+library(shiny)
+shinyServer(
+  function(input, output){
+    output$myName <- renderText(input$name)
+    output$myAge <- renderText(input$age)
+    output$myGender <- renderText(input$gender)
+    
+  }
+)
+
+
+
