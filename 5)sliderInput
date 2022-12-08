@@ -1,0 +1,24 @@
+library(shiny)
+shinyUI(fluidPage(
+  titlePanel(title = "This is shinyApp"),
+  sidebarLayout(
+    sidebarPanel(("Enter personal information"),
+                 sliderInput("slide", "select the value from slider", min = 0, max=5, value = 2 , animate = T, step = 2  )
+                 ),
+                 
+    mainPanel(textOutput("out")
+              ),
+    
+  ),
+  
+))
+
+
+
+library(shiny)
+shinyServer(
+  function(input, output){
+    output$out <- renderText(
+      paste("you selected the value as : ", input$slide))
+  }
+)
