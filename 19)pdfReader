@@ -1,0 +1,51 @@
+# R Shiny app demo - display PDF in app as reference document
+library(shiny)
+# Simple shiny layout for demo sake
+shinyUI(fluidPage(
+  sidebarLayout(
+    sidebarPanel(
+      h5("use case - embed a pdf user guide in the app - embed as a local pdf or from web URL")
+    ), 
+    mainPanel(
+      tabsetPanel(
+        # using iframe along with tags() within tab to display pdf with scroll, height and width could be adjusted
+        tabPanel("Reference", 
+                 tags$iframe(style="height:400px; width:100%; scrolling=yes", 
+                             src="https://cran.r-project.org/doc/manuals/r-release/R-intro.pdf")),
+        tabPanel("Summary"),
+        tabPanel("Plot")
+      )
+    ))
+  
+))
+
+
+# Example web url used in our demo app
+# https://cran.r-project.org/doc/manuals/r-release/R-intro.pdf
+
+# Please note that the code might not work with all https:// links such as 
+# this drop box link might not work 
+# https://www.dropbox.com/s/clzf4cd92nqd706/Get%20Started%20with%20Dropbox.pdf?dl=0
+
+# Replace dl=0 with raw=1 to fix if drop box link does not work
+# https://www.dropbox.com/s/clzf4cd92nqd706/Get%20Started%20with%20Dropbox.pdf?raw=1
+
+# If problems with drop box link not showing pdf, refer to the below stackoverflow 
+# http://stackoverflow.com/questions/29763759/how-to-open-a-dropbox-file-in-the-application-webpage
+
+# if using the local copy of pdf, ensure that the pdf is in www folder 
+# and specify the relative path accordingly against src
+# Example I am in my working directory and "shiny-cheatsheet.pdf" is in www folder withn working directory
+
+# tabPanel("Reference", 
+#                 tags$iframe(style="height:400px; width:100%; scrolling=yes", 
+#                  src="shiny-cheatsheet.pdf"))
+
+
+
+library(shiny)
+
+shinyServer(function(input, output,session){
+  
+  
+})
