@@ -1,0 +1,57 @@
+library(shiny)
+shinyServer(function(input, output){
+  
+  colm = reactive({
+    as.numeric(input$var)
+  }) 
+  output$myhist = renderPlot(
+    {
+      hist(iris[,colm()], breaks = seq(0,max(iris[,colm()], l= input$bins+1)),col =input$color, main ="Histogram of irish dataset", xlab = names(iris[colm()]))
+    }
+  )
+  
+  output$down <- downloadHandler(
+    filename =  function() {
+      paste("iris", input$type, sep=".") # replace input$var3 by input$type ty Abi
+    },
+    # content is a function with argument file. content writes the plot to the device
+    content = function(file) {
+      if(input$type == "png") # replace input$var3 by input$type ty Abi
+        png(file) # open the png device
+      else
+        pdf(file) # open the pdf device
+      hist(colm()) # draw the plot
+      dev.off()  # turn the device off
+      
+    } 
+  )
+  
+  
+  
+})
+
+
+library(shiny)
+
+
+shinyUI(
+  fluidPage(
+    titlePanel(title = h4('Demonstraion of renderplot', align='center')),
+    sidebarLayout(
+      sidebarPanel(
+        selectInput('var1', "Select the xVariable", choices = c('Sepal.Length' =1 , 'sepal width' = 2, 'Petal Length' = 3 , 'Petal Width' = 4), selected = 1),
+        br(),
+        selectInput('var2', "Select the yVariable", choices = c('Sepal.Length' =1 , 'sepal width' = 2, 'Petal Length' = 3 , 'Petal Width' = 4), selected = 1),
+        br(),
+        radioButtons('type', 'Choose the type', choices = list('png', 'pdf'), selected = 'png')
+        
+      ),
+      mainPanel(
+        plotOutput("plot"),
+        downloadButton(outputId = 'down', label = "Download the plot")
+        
+        
+      )
+    )
+  )
+)
